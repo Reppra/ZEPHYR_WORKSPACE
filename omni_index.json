@@ -1,0 +1,17 @@
+{
+  "policy": "harness/policy.json",
+  "bootstrap": "C1/bootstrap.json",
+  "library": "C2/index.json",
+  "plans": "C3.1",
+  "execution": "C3.2",
+  "memory": {
+    "events": "C3.3/events.jsonl",
+    "sm": "C3.3/sm.jsonl",
+    "mm": "C3.3/mm.jsonl",
+    "lm": "C3.3/lm.jsonl",
+    "compactions": "C3.3/compactions.jsonl",
+    "positive": "C3.3/positive.jsonl",
+    "negative": "C3.3/negative.jsonl",
+    "spool": "C3.3/spool"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "zephyr-redbolt-a2",
+  "version": "0.8.2",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "build": "node tools/build.js",
+    "check": "node tools/check.js",
+    "test": "node --test tests/*.test.js",
+    "dev": "node tools/serve.js",
+    "release": "node tools/release.js",
+    "harness": "node tools/harness.js",
+    "memory": "node tools/memctl.js"
+  }
+}

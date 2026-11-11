@@ -1,0 +1,1 @@
+{"t":"R-LOCAL","so":"local-authority","st":"rule","n":"Host instructions prevail. Explicit gates and exact-path evidence are mandatory. Role labels are not an OS sandbox.","s":{"path":"C1/bootstrap.json","sha256":"f261a6cff3dbb8e1ca7f92c4e75a843bdacd9e82008c7130bce76490070327aa"},"c":1}

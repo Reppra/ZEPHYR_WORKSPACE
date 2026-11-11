@@ -1,0 +1,151 @@
+{
+  "version": "0.8.2",
+  "release": 14,
+  "archive": "releases/SUN_014_v0.8.2.zip",
+  "archiveBytes": 101931,
+  "archiveSha256": "b4001d1741b674d5fbb53264f9b61285d11ac60bc7ee86978255cecdca727e40",
+  "entries": [
+    "SUN_014.html"
+  ],
+  "html": {
+    "ok": true,
+    "bytes": 365467,
+    "sha256": "0ebcc524122b15330dc95cfdb16989588776b6f0f8d0231c8e0dc77cb170d7da",
+    "inlineScripts": 1,
+    "externalDependencies": 0,
+    "benchmarkTestDeclarations": 226
+  },
+  "sources": [
+    {
+      "path": "src/index.template.html",
+      "sha256": "e5525266f9bd51ffbb5c51a97205e684837ad5bc9db8ba54754d32ad1553329e"
+    },
+    {
+      "path": "src/styles.css",
+      "sha256": "7f3bd65a06790aecd01d7df60d019f2d1870d12566ed1bd46b1e21d713b98989"
+    },
+    {
+      "path": "src/modules/kernel.js",
+      "sha256": "a9f12fce5f6cc150b0d08a99d8ebc70282e9bf897d17c4309c3a1f47cdf9af95"
+    },
+    {
+      "path": "src/modules/state.js",
+      "sha256": "3730c2df9f96a039e0ddc484d395d2270798ff7171010fedbf24eddc403c2b42"
+    },
+    {
+      "path": "src/modules/math.js",
+      "sha256": "caadee1c84b5391c9132790b3fe82df9bf0631c35d1331f2dcb4f3fb5939224f"
+    },
+    {
+      "path": "src/modules/scores.js",
+      "sha256": "fd740044ea023d3e56d336ef6a0b8f6d6a6cea13944866ad665b74e3b3c7b39e"
+    },
+    {
+      "path": "src/modules/daily.js",
+      "sha256": "fffb90a3e591f18ff959511cf50b4bb7febf135d78f5ee71f5a4656da0b47bc3"
+    },
+    {
+      "path": "src/modules/progression.js",
+      "sha256": "035df3eba5172597378148bc1315bb83dc398bb7bf88a2d66c73748c58bfd2d9"
+    },
+    {
+      "path": "src/modules/achievements.js",
+      "sha256": "bc3e60b384fe3a1aa2dde8e4709dda81a2a62f3ec3e3e794cf643cee26f52875"
+    },
+    {
+      "path": "src/modules/localization.js",
+      "sha256": "61c73be9bbd25e4a91095048e1c7ad1c02a41ef1885bf294b0b7ed9169c472fa"
+    },
+    {
+      "path": "src/modules/settings.js",
+      "sha256": "f0fc46bdeb5d5348f762608345921c38f2635846314a8456497b97026e6d127f"
+    },
+    {
+      "path": "src/modules/perks.js",
+      "sha256": "adf2b8f061cc9ae8701f6b451a05fb5e68900d4d15e594d8d5b108ecb1ee10a5"
+    },
+    {
+      "path": "src/modules/arena.js",
+      "sha256": "8d3735de53dac50ae86784b2e0dfa0625450046b3b3d8d9150e7c2815fdd3cb5"
+    },
+    {
+      "path": "src/modules/renderer.js",
+      "sha256": "8c3bce260fd3ec9d2eaca9b14ea5043fb638896d93fab9dd641785378064a68f"
+    },
+    {
+      "path": "src/modules/audio.js",
+      "sha256": "6dd69634e77e25a3c5645970b17f219f7757cc7c48acf271e2fed21b7895b4c2"
+    },
+    {
+      "path": "src/modules/spawn.js",
+      "sha256": "cce7e6e70ba6feb26d76dbe7e3a440763b0c5b6878591d1695985eacb95cbf65"
+    },
+    {
+      "path": "src/modules/combat.js",
+      "sha256": "78ad0b6ee4ca87305dd1597ec0e825bc8b4b0bb6892bc07a15bc0e61d8411ee8"
+    },
+    {
+      "path": "src/modules/weapons.js",
+      "sha256": "5495d60435407b17a4bc2553e782ee886eeb56bcc461107f12860c64deec5b99"
+    },
+    {
+      "path": "src/modules/player.js",
+      "sha256": "219a5dbf53dc10e44021cff1d325c4e8ed18d374d6d7f2a77b60242e42dd0d9a"
+    },
+    {
+      "path": "src/modules/enemies.js",
+      "sha256": "276f9e8b8031bfc0d54b738bc7a09ed8a0c3d7cd5aeadf859e0f577a7d255a36"
+    },
+    {
+      "path": "src/modules/simulation.js",
+      "sha256": "46814a20f01d3cc53c76828e6b929e7af2d0f5d65c706e500f544afad9112035"
+    },
+    {
+      "path": "src/modules/hud.js",
+      "sha256": "e567db685032897b519cfc899afa32fe7469d021d85d7d68a5d20c3b06e5d6b2"
+    },
+    {
+      "path": "src/modules/input.js",
+      "sha256": "480088ccca928f52cce4536a7c88bf58197b5bac2464d5547e57d13007063911"
+    },
+    {
+      "path": "src/modules/transitions.js",
+      "sha256": "2ce9756ffa8f297689cbac7ec735190a2c4a8753c28691714963235539f605f1"
+    },
+    {
+      "path": "src/modules/replay.js",
+      "sha256": "6059dc462307081b4641fc41ca28eec1f7ec6650b76c61dc5cdf899bc9942bc0"
+    },
+    {
+      "path": "src/modules/benchmark.js",
+      "sha256": "3ca2e80beea99790290d7583c5df0e0a4cb55e854dab72a8343478e42b31e38e"
+    },
+    {
+      "path": "src/modules/downloads.js",
+      "sha256": "80c7b8cd188cc476acac24d6f66f2b04e8ede3920ba72e7a9bb530b505989bba"
+    },
+    {
+      "path": "src/modules/controls.js",
+      "sha256": "bc8d6006fbb0669bf542e5aa3db89c3199be3badac0e522f609a7c20ac2350f3"
+    },
+    {
+      "path": "src/modules/bindings.js",
+      "sha256": "13173d1aea411c10ea4d57e94c3415cd3eb34d0dfa1ffdfeac3c15191eed7e6c"
+    },
+    {
+      "path": "src/modules/loop.js",
+      "sha256": "5918c2750f176d11c8b0900fb0d1900caa6a2e15936037314443cf47c0a04ed6"
+    },
+    {
+      "path": "src/modules/settings-ui.js",
+      "sha256": "ea2170dedbade153dad016e45874c13a652073b2ebb9d788060c068aa141b9d4"
+    },
+    {
+      "path": "src/modules/boot.js",
+      "sha256": "a94c9e671c5bd87dc4470c7c46ec3fa8173fd39ed576872b50b37f5435b555ef"
+    }
+  ],
+  "tests": "node --test tests/*.test.js",
+  "runtime": "Offline browser; WebGL2 required; WASM optional; no network or package dependencies",
+  "development": "Node.js 22+; built-in modules only"
+}

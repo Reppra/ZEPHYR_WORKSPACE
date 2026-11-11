@@ -1,0 +1,48 @@
+{
+  "artifact": "dist/SUN_014.html",
+  "version": "0.8.2",
+  "sha256": "0ebcc524122b15330dc95cfdb16989588776b6f0f8d0231c8e0dc77cb170d7da",
+  "environment": {
+    "browser": "Qoder in-app Chromium",
+    "viewport": [525, 553],
+    "visibility": "visible",
+    "renderer": "ANGLE AMD Radeon(TM) Graphics Direct3D11",
+    "originsTested": ["http://127.0.0.1:4173/", "file://"],
+    "targetUserGPU": "Not the user's software-rasterized or passthrough device"
+  },
+  "finalArtifactChecks": {
+    "offlineWasmEN": {"total": 227, "pass": 221, "fail": 0, "threw": 0, "skip": 6},
+    "offlineWasmDE": {"total": 227, "pass": 224, "fail": 0, "threw": 0, "skip": 3},
+    "offlineJavaScriptFallback": {"total": 227, "pass": 221, "fail": 0, "threw": 0, "skip": 6, "wasmDisabled": true},
+    "extractedZipHTML": {"path": "C3.2/extracted/SUN_014.html", "byteIdenticalToBuild": true, "benchmarkPass": 221, "benchmarkSkip": 6, "benchmarkFail": 0, "releaseChecklist": true},
+    "externalResourceRequests": 0,
+    "menuAndSeedRestoredAfterBenchmark": true,
+    "gameplay": {"started": true, "moved": true, "fired": true, "pause": true, "resume": true, "menu": true, "nonClearSamples": 64},
+    "recordedReplay": {"frames": 120, "seed": 4242, "speed": 2, "firstPersonMatch": true, "thirdPersonMatch": true, "freeOrbitMatch": true, "nonClearSamplesPerCamera": 64},
+    "graphicsRecovery": {"lossAndRestore": true, "noReload": true, "nonClearSamples": 64},
+    "drawingBufferPixels": 290325,
+    "antialias": false
+  },
+  "startupFailureCheck": {
+    "webgl2Unavailable": "Explicit persistent error; play and benchmark disabled",
+    "observedErrorAfterMilliseconds": 15119,
+    "testedBeforeReplayPrecisionChange": true
+  },
+  "benchmarkSkips": {
+    "coldOnly": ["audio.ensureAudio", "audio.tone", "audio.noiseBurst"],
+    "always": ["state.togglePause", "state.toMenu", "critic.idleQuiet"],
+    "separateChecks": "Pause and menu exercised programmatically; 60-second critic-idle claim remains unverified"
+  },
+  "visualEvidence": {
+    "menu": "C3.2/menu.png",
+    "gameplay": "C3.2/gameplay.png",
+    "scope": "Screenshots inspected during rebuild at 525x553; gameplay frame intentionally frozen for capture"
+  },
+  "residuals": [
+    "Native pointer lock could not be established in this automated host; mouse-lock feedback was shown",
+    "Automated non-gesture benchmark calls generated browser-denied vibration warnings; no claim of a clean browser console is made",
+    "Physical touch, phone layout, user passthrough GPU performance, Firefox and Safari remain unverified",
+    "Replay test covers a short keyboard-driven run, not every unlock/settings combination or analog touch recording",
+    "No autonomous model provider, OS role isolation or encryption is supplied by the development harness"
+  ]
+}

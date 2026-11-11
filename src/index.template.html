@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>SUN_011 · REDBOLT — neon arena FPS</title>
+<style>
+{{STYLES}}</style>
+</head>
+<body>
+<canvas id="glcanvas"></canvas>
+<div id="bgfx"></div>
+<div id="gridfx"></div>
+<div id="vignette"></div>
+<div id="damage"></div>
+<div id="lowhp"></div>
+
+<div id="topbar">
+  <span class="brand">SUN_011 · <b>REDBOLT</b></span>
+  <span class="spacer"></span>
+  <button id="muteBtn" class="iconbtn" title="Toggle sound" aria-label="Toggle sound" data-i18n-aria="muteAria"><span class="dot"></span><span id="muteLbl">SOUND ON</span></button>
+  <button id="pauseBtn" class="iconbtn" style="display:none" aria-label="Pause game" data-i18n-aria="pauseAria" data-i18n="pause">PAUSE</button>
+  <button id="photoBtn" class="iconbtn" style="display:none" aria-label="Capture photo" data-i18n-aria="photoAria" data-i18n="photo">PHOTO</button>
+</div>
+
+<div id="hud">
+  <div class="hud-top">
+    <div class="stat" id="hudScore"><span class="lbl" data-i18n="score">SCORE</span><span class="val" id="scoreVal">0</span></div>
+    <div class="stat" id="hudWave"><span class="lbl" data-i18n="wave">WAVE</span><span class="val" id="waveVal">1</span></div>
+    <div class="stat" id="hudCombo"><span class="lbl" data-i18n="combo">COMBO</span><span class="val" id="comboVal">×1</span></div>
+  </div>
+  <div id="bossBar"><span class="lbl" id="bossLbl" data-i18n="warden">WARDEN</span><div class="bar"><i id="bossFill"></i></div></div>
+  <canvas id="minimap" width="132" height="132"></canvas>
+  <div class="hud-bl">
+    <div class="bar"><i id="hpFill"></i><span class="txt" id="hpTxt">100</span></div>
+    <div class="hud-row"><span id="hudAmmo"><b>12</b> / 12</span><span id="reloadHint"></span></div>
+  </div>
+  <div class="hud-br">
+    <div>FPS <b id="perfFps">0</b> · QUADS <b id="perfQuads">0</b></div>
+    <div>ENEMIES <b id="perfEnt">0</b> · <b id="hudPos">0,0,0</b> · S <b id="seedVal">0</b> · EV <b id="hudEv">0</b>/s · <span id="hudBiome">NEON</span></div>
+  </div>
+</div>
+<div id="zonePreview"></div>
+<div id="crosshair"><i></i></div>
+<div id="hitmarker"></div>
+<div id="waveBanner"><div class="big" id="waveBig">WAVE 1</div><div class="sub" id="waveSub">HOSTILES INBOUND</div></div>
+<div id="powerToast" role="status" aria-live="polite"></div>
+
+<div id="touch">
+  <div id="stick"><div id="stickNub"></div></div>
+  <div id="fireBtn" class="tbtn" data-i18n="fire">FIRE</div>
+  <div id="jumpBtn" class="tbtn" data-i18n="jump">JUMP</div>
+  <div id="reloadBtn" class="tbtn" data-i18n="rld">RLD</div>
+  <div id="wpnBtns"><div class="tbtn wpn" data-w="0">PUL</div><div class="tbtn wpn" data-w="1">SCT</div><div class="tbtn wpn" data-w="2">RAL</div><div class="tbtn wpn" data-w="3">ARC</div></div>
+</div>
+
+<!-- MENU -->
+<div id="overlay" class="overlay">
+  <div class="panel">
+    <div class="eyebrow" data-i18n="eyebrow">NEON ARENA · WAVE SURVIVAL · WEBGL2 + WASM</div>
+    <h1 class="title"><span class="r">RED</span><span class="c">BOLT</span></h1>
+    <p class="tagline" data-i18n="tagline">Hold the arena against escalating waves of neon drones. Chain kills for combo multipliers, grab power-ups, and survive as long as you can. Built clean from zero — a stateless WASM math kernel drives the procedural arena.</p>
+    <div class="ver">v<span id="verVal">{{VERSION}}</span> · SUN_011</div>
+    <div class="controls">
+      <div class="field">
+        <label data-i18n="difficulty">DIFFICULTY</label>
+        <div class="seg" id="diffSeg">
+          <button data-d="0" data-i18n="easy">EASY</button><button data-d="1" class="on" data-i18n="normal">NORMAL</button><button data-d="2" data-i18n="hard">HARD</button>
+        </div>
+      </div>
+      <div class="field">
+        <label><span data-i18n="sensitivity">MOUSE SENSITIVITY</span> · <span id="sensVal">1.0</span></label>
+        <input type="range" id="sensRange" min="0.3" max="2.5" step="0.1" value="1.0">
+      </div>
+      <div class="field">
+        <label><span data-i18n="seed">RUN SEED</span> · <span id="seedHint" data-i18n="blankRandom">BLANK = RANDOM</span></label>
+        <input type="text" id="seedInput" placeholder="random" data-i18n-ph="randomPh" autocomplete="off" spellcheck="false">
+      </div>
+    </div>
+    <div class="btnrow">
+      <button id="overlayBtn" class="btn fire" data-i18n="enter">ENTER WORLD</button>
+      <button id="benchmarkBtn" class="btn ghost" data-i18n="benchmark" aria-label="Run benchmark" data-i18n-aria="benchAria">BENCHMARK</button>
+      <button id="importReplayBtn" class="btn ghost" data-i18n="importReplay">IMPORT REPLAY</button>
+      <input type="file" id="replayFile" accept=".json,application/json" style="display:none">
+    </div>
+    <div id="dailyPanel">
+      <div class="hs-title" data-i18n="dailyTitle">DAILY CHALLENGE</div>
+      <div class="daily-row"><span data-i18n="dailySeedLbl">TODAY'S SEED</span>: <b id="dailySeedVal">-</b></div>
+      <div class="daily-row"><span data-i18n="dailyBestLbl">BEST TODAY</span>: <b id="dailyBestVal">-</b></div>
+      <div class="daily-row daily-verify">
+        <input type="text" id="dailyCodeInput" placeholder="paste code" data-i18n-ph="dailyCodePh" autocomplete="off" spellcheck="false">
+        <button id="dailyVerifyBtn" class="btn ghost" data-i18n="dailyVerify">VERIFY</button>
+      </div>
+      <button id="dailyBtn" class="btn fire" data-i18n="dailyPlay">PLAY DAILY</button>
+    </div>
+    <div class="hint">
+      <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> move · <kbd>MOUSE</kbd> look · <kbd>CLICK</kbd> fire · <kbd>SPACE</kbd> jump · <kbd>SHIFT</kbd> sprint · <kbd>R</kbd> reload · <kbd>ESC</kbd> pause
+    </div>
+    <div id="hsWrap">
+      <div class="hs-title" data-i18n="bestRuns">BEST RUNS · TOP 10</div>
+      <div id="hsList">NO RUNS YET</div>
+      <div class="hs-title" id="achCount" style="margin-top:8px">ACH 0/8</div>
+      <div class="hs-title" id="metaBadge" style="margin-top:8px">LV 1 · 0/250 XP</div>
+      <div id="unlocksPanel"></div>
+    </div>
+    <div id="benchPanel">
+      <div class="bench-head">
+        <span id="benchBadge" class="badge run">READY</span>
+        <span class="bench-count" id="benchCount"></span>
+        <span class="spacer"></span>
+        <button id="exportBtn" class="btn ghost" style="flex:0;min-width:0;padding:9px 16px;font-size:12px" data-i18n="exportJson" aria-label="Export JSON" data-i18n-aria="exportAria">EXPORT JSON</button>
+        <button id="copyResultsBtn" class="btn ghost" style="flex:0;min-width:0;padding:9px 16px;font-size:12px" data-i18n="copyResults">COPY RESULTS</button>
+      </div>
+      <div id="benchScroll"><pre id="benchmarkPre">Run the benchmark to test every function and factor of the system. Results are pushed to the console for copy/paste.</pre></div>
+    </div>
+    <div id="setPanel">
+      <div class="set-title" data-i18n="settings">SETTINGS</div>
+      <div class="set-row"><label for="volRange" data-i18n="volume">VOLUME</label><input type="range" id="volRange" min="0" max="1" step="0.05" value="0.5"><span class="set-val" id="volVal">0.50</span></div>
+      <div class="set-row">
+        <label for="sensXRange" data-i18n="sensX">SENS X</label><input type="range" id="sensXRange" min="0.2" max="3" step="0.1" value="1">
+        <span class="set-val" id="sensXVal">1.0</span>
+        <label for="sensYRange" data-i18n="sensY">SENS Y</label><input type="range" id="sensYRange" min="0.2" max="3" step="0.1" value="1">
+        <span class="set-val" id="sensYVal">1.0</span>
+      </div>
+      <div class="set-row">
+        <label for="deadzoneRange" data-i18n="deadzone">DEADZONE</label><input type="range" id="deadzoneRange" min="0" max="0.3" step="0.02" value="0.12">
+        <span class="set-val" id="deadzoneVal">0.12</span>
+      </div>
+      <div class="set-row">
+        <label for="leftyChk"><input type="checkbox" id="leftyChk"> <span data-i18n="lefty">LEFT-HANDED</span></label>
+      </div>
+      <div class="set-row">
+        <label for="invertYChk"><input type="checkbox" id="invertYChk"> <span data-i18n="invertY">INVERT Y</span></label>
+        <label for="minimapChk"><input type="checkbox" id="minimapChk" checked> <span data-i18n="minimap">MINIMAP</span></label>
+        <label for="musicChk"><input type="checkbox" id="musicChk" checked> <span data-i18n="music">MUSIC</span></label>
+        <label for="qualitySel" data-i18n="quality">QUALITY</label>
+        <select id="qualitySel"><option value="auto" data-i18n="auto">AUTO</option><option value="low" data-i18n="low">LOW</option><option value="high" data-i18n="high">HIGH</option></select>
+      </div>
+      <div class="set-row">
+        <label for="langSel" data-i18n="language">LANGUAGE</label>
+        <select id="langSel"><option value="" data-i18n="auto">AUTO</option><option value="en">EN</option><option value="de">DE</option></select>
+      </div>
+      <div class="set-row">
+        <label for="a11yMotionChk"><input type="checkbox" id="a11yMotionChk"> <span data-i18n="reducedMotion">REDUCED MOTION</span></label>
+        <label for="a11yContrastChk"><input type="checkbox" id="a11yContrastChk"> <span data-i18n="highContrast">HIGH CONTRAST</span></label>
+        <label for="a11yColorChk"><input type="checkbox" id="a11yColorChk"> <span data-i18n="colorblind">COLORBLIND</span></label>
+      </div>
+      <div class="set-row">
+        <label for="autotuneChk"><input type="checkbox" id="autotuneChk"> <span data-i18n="autotune">AUTOTUNE</span></label>
+        <label for="hapticChk"><input type="checkbox" id="hapticChk" checked> <span data-i18n="haptics">HAPTICS</span></label>
+      </div>
+      <div class="set-row">
+        <label for="goldBiomeChk"><input type="checkbox" id="goldBiomeChk" checked> <span data-i18n="uGold">GOLD BIOME</span></label>
+      </div>
+      <div class="set-row">
+        <label for="tapFireChk"><input type="checkbox" id="tapFireChk" checked> <span data-i18n="tapFire">TAP FIRE</span></label>
+        <label for="fireZoneRange" data-i18n="fireZone">FIRE ZONE</label>
+        <input type="range" id="fireZoneRange" min="0.25" max="0.6" step="0.05" value="0.45">
+        <span class="set-val" id="fireZoneVal">45%</span>
+      </div>
+      <div class="set-hint" data-i18n="fireZoneHint">LEFT SIDE TAPS FIRE</div>
+      <div class="set-row">
+        <button id="purgeScoresBtn" class="btn ghost" style="flex:0;min-width:0;padding:8px 14px;font-size:12px" data-i18n="clearScores">CLEAR SCORES</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAUSE -->
+<div id="pauseOverlay" class="overlay hidden">
+  <div class="panel" style="width:min(440px,92vw)">
+    <div class="eyebrow" data-i18n="suspended">SIMULATION SUSPENDED</div>
+    <h2 class="title" style="font-size:clamp(28px,6vw,44px)"><span class="c" data-i18n="paused">PAUSED</span></h2>
+    <div id="pauseSettings">
+      <div class="set-row"><label for="pVolRange" data-i18n="volume">VOLUME</label><input type="range" id="pVolRange" min="0" max="1" step="0.05" value="0.5"><span class="set-val" id="pVolVal">0.50</span></div>
+      <div class="set-row"><label for="pSensRange" data-i18n="sensitivity">SENSITIVITY</label><input type="range" id="pSensRange" min="0.3" max="2.5" step="0.1" value="1.0"><span class="set-val" id="pSensVal">1.0</span></div>
+      <div class="set-row"><label for="pMusicChk"><input type="checkbox" id="pMusicChk" checked> <span data-i18n="music">MUSIC</span></label></div>
+    </div>
+    <div id="perkList" class="hint" style="margin-top:10px"></div>
+    <div class="btnrow" style="margin-top:18px">
+      <button id="resumeBtn" class="btn primary" data-i18n="resume">RESUME</button>
+      <button id="pauseMenuBtn" class="btn ghost" data-i18n="menu">MENU</button>
+    </div>
+    <div class="hint" data-i18n="pauseHint">Pointer released. Click RESUME to re-enter the arena.</div>
+  </div>
+</div>
+
+<!-- PERK CHOICE -->
+<div id="perkOverlay" class="overlay hidden">
+  <div class="panel" style="width:min(560px,94vw)">
+    <div class="eyebrow" style="color:var(--amber)" id="perkPick">CHOOSE ONE</div>
+    <h2 class="title" style="font-size:clamp(28px,6vw,44px)"><span class="c" id="perkTitle">UPGRADE</span></h2>
+    <div id="perkChoices" style="display:flex;flex-direction:column;gap:10px;margin-top:16px"></div>
+    <button id="perkRerollBtn" class="btn ghost" style="display:none;margin-top:12px" data-i18n="perkReroll">REROLL</button>
+  </div>
+</div>
+
+<!-- GAME OVER -->
+<div id="gameOverOverlay" class="overlay hidden">
+  <div class="panel" style="width:min(560px,94vw)">
+    <div class="eyebrow" style="color:var(--red)" data-i18n="signalLost">SIGNAL LOST</div>
+    <h2 class="title" style="font-size:clamp(32px,7vw,52px)"><span class="r" data-i18n="gameOver">GAME OVER</span></h2>
+    <div class="go-stats">
+      <div class="go-stat"><div class="v" id="goScore">0</div><div class="k" data-i18n="score">SCORE</div></div>
+      <div class="go-stat"><div class="v" id="goWave">1</div><div class="k" data-i18n="wave">WAVE</div></div>
+      <div class="go-stat"><div class="v" id="goKills">0</div><div class="k" data-i18n="kills">KILLS</div></div>
+      <div class="go-stat"><div class="v" id="goAcc">0%</div><div class="k" data-i18n="accuracy">ACCURACY</div></div>
+      <div class="go-stat"><div class="v" id="goTime">0s</div><div class="k" data-i18n="survived">SURVIVED</div></div>
+      <div class="go-stat"><div class="v" id="goBest">0</div><div class="k" data-i18n="best">BEST</div></div>
+      <div class="go-stat"><div class="v" id="goSeed">0</div><div class="k" data-i18n="seedShort">SEED</div></div>
+      <div class="go-stat"><div class="v" id="goDmg">0</div><div class="k" data-i18n="dmgTaken">DMG TAKEN</div></div>
+    </div>
+    <div class="go-detail" id="goDetail"></div>
+    <div id="goDailyWrap" style="display:none">
+      <div class="hs-title" data-i18n="dailyShare">SHARE CODE</div>
+      <div class="go-detail" id="goDailyCode" style="user-select:all"></div>
+      <button id="goDailyCopy" class="btn ghost" data-i18n="dailyCopy">COPY CODE</button>
+    </div>
+    <div class="btnrow">
+      <button id="retryBtn" class="btn fire" data-i18n="retry">RETRY</button>
+      <button id="goMenuBtn" class="btn ghost" data-i18n="menu">MENU</button>
+      <button id="replayBtn" class="btn ghost" data-i18n="exportReplay">EXPORT REPLAY</button>
+      <button id="watchBtn" class="btn ghost" style="display:none" data-i18n="watch">WATCH</button>
+    </div>
+  </div>
+</div>
+
+<!-- REPLAY PLAYBACK -->
+<div id="pbBar" class="hidden">
+  <span class="pb-lbl" data-i18n="pbTitle">PLAYBACK</span>
+  <button id="pbToggle" class="btn ghost" data-i18n="pause">PAUSE</button>
+  <button id="pbCam" class="btn ghost" title="C">CAM: FIRST</button>
+  <span class="pb-lbl" data-i18n="pbSpeed">SPEED</span>
+  <button class="btn ghost pb-spd" data-s="0.5">0.5×</button>
+  <button class="btn ghost pb-spd on" data-s="1">1×</button>
+  <button class="btn ghost pb-spd" data-s="2">2×</button>
+  <span id="pbInfo">0/0</span>
+  <button id="pbExit" class="btn ghost" data-i18n="pbExit">EXIT</button>
+</div>
+<div id="pbEnd" class="overlay hidden">
+  <div class="panel" style="width:min(460px,94vw);text-align:center">
+    <div class="eyebrow" data-i18n="pbDone">PLAYBACK DONE</div>
+    <h2 class="title" id="pbEndTitle" style="font-size:clamp(26px,6vw,42px)">RUN VERIFIED</h2>
+    <div class="go-detail" id="pbEndSub"></div>
+    <div class="btnrow" style="justify-content:center"><button id="pbEndOk" class="btn fire" data-i18n="menu">MENU</button></div>
+  </div>
+</div>
+
+<!-- work_010 P2: SUPERvm deck (cheese nested inside) + mouse mascot seeker -->
+<div id="vmDeck"><span class="lbl">SUPERvm</span><span class="sub">MOUSE DECK</span><div id="cheese"></div></div>
+<div id="mouseMascot"></div>
+<!-- work_010 P6: CRITIC FLEET badge — lit slot = agent filed a finding -->
+<div id="criticBadge"><span data-agent="alpha">ALPHA</span><span data-agent="bravo">BRAVO</span><span data-agent="charlie">CHARLIE</span><span data-agent="delta">DELTA</span><span data-agent="echo">ECHO</span></div>
+
+<div id="errbox"></div>
+
+<!-- GRAPHICS CONTEXT LOST (graceful, never an auto-reload loop) -->
+<div id="ctxOverlay" class="overlay hidden" style="z-index:55">
+  <div class="panel" style="width:min(460px,94vw);text-align:center">
+    <div class="eyebrow" style="color:var(--amber)">GRAPHICS INTERRUPTED</div>
+    <h2 class="title" style="font-size:clamp(26px,6vw,40px)"><span class="c">CONTEXT LOST</span></h2>
+    <p class="tagline" style="margin:0 auto 22px">The GPU dropped the render context. Your run is preserved in memory — graphics are being restored in place.</p>
+    <div class="btnrow" style="justify-content:center">
+      <button id="ctxBtn" class="btn primary" style="flex:0 1 auto;min-width:200px">RESTORE GRAPHICS</button>
+    </div>
+    <div class="hint" id="ctxHint">Auto-restore is running. If the screen stays blank, use the button above.</div>
+  </div>
+</div>
+
+<script>
+{{SCRIPTS}}</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "Zephyr local workflow harness",
+  "version": 1,
+  "cycleOrigin": 1,
+  "roles": [
+    "KERNEL",
+    "PLANER",
+    "WORKER",
+    "MEMORY",
+    "DEVIL",
+    "HUMAN"
+  ],
+  "rule": "Host instructions and permissions prevail. Explicit gates, exact evidence, append-only history. No autonomous model provider; role labels are not a security sandbox."
+}

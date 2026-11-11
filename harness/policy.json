@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "mode": "Manual, host-neutral local workflow; no model provider or autonomous agents.",
+  "authority": "Host instructions and OS permissions remain authoritative. Role labels are workflow separation, not an OS security sandbox. Local files and allowlisted tool code must be trusted.",
+  "roles": ["KERNEL", "PLANER", "WORKER", "MEMORY", "DEVIL", "HUMAN"],
+  "dispatch": {"build": "tools/build.js", "check": "tools/check.js"},
+  "gates": ["egress", "irreversible", "financial", "promotion"],
+  "limits": {"maxActions": 8, "wallTimeMs": 120000, "maxInputBytes": 262144, "maxContextTokens": 65536, "outputBytes": 1048576},
+  "memory": {
+    "sm": {"activeRows": 500, "activeBytes": 262144, "physicalBytes": 16777216},
+    "mm": {"activeRows": 250, "activeBytes": 131072, "physicalBytes": 16777216},
+    "lm": {"activeRows": 100, "activeBytes": 65536, "physicalBytes": 16777216}
+  },
+  "notes": [
+    "Only build/check can run through process.execPath with fixed literal arguments. No test dispatch, arbitrary shell, or networking API.",
+    "Approvals bind an exact immutable plan hash and action ID; approvals cannot clear a veto or enable unknown tools.",
+    "Evidence is SHA256 bound to its exact root-relative path. Immutable snapshots detect tampering; they are not encryption or OS-enforced write protection.",
+    "All mutation uses one exclusive lock. Journal intents recover interrupted appends; tier projections are append-only and recover from the journal.",
+    "Compaction runs only at a closed cycle boundary. Physical history is retained; active capacity excludes explicitly compacted rows.",
+    "Full tiers defer ledger memory admission, never authoritative evidence or cycle closure. Compaction admits deferred rows when capacity permits.",
+    "Emergency stop is checked during execution. It terminates the direct child, cannot undo completed effects, and is not an OS process-tree sandbox.",
+    "A crashed lock is never automatically stolen. An operator must confirm no live writer and remove C3.3/.mutation.lock before retrying.",
+    "Context token budgets are conservative byte/4 estimates, not provider token usage."
+  ]
+}
